@@ -59,10 +59,12 @@ function ImageList({ images, editable = false, onDeleteLocal }) {
                       type="text"
                       value={editTitle}
                       onChange={(e) => setEditTitle(e.target.value)}
+                      className="input input-bordered w-full"
                     />
                     <textarea
                       value={editDescription}
                       onChange={(e) => setEditDescription(e.target.value)}
+                      className="input input-bordered w-full h-32"
                     />
                     <input
                       type="file"

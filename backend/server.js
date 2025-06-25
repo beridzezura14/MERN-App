@@ -7,13 +7,14 @@ import { fileURLToPath } from "url";
 import uploadRoute from "./routes/uploadRoute.js";
 import authRoute from "./routes/authRoute.js";
 
-
 dotenv.config();
 
 const app = express();
-app.use(cors({ origin: "http://localhost:5173" }));
-app.use(express.json());
 
+if (process.env.NODE_ENV !== "production") {
+  app.use(cors({ origin: "http://localhost:5173" }));
+}
+app.use(express.json());
 
 // ფაილების შესანახად
 const __filename = fileURLToPath(import.meta.url);
@@ -22,6 +23,13 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/upload", uploadRoute);
 app.use("/api", authRoute);
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+  });
+}
 
 // MongoDB კავშირი
 mongoose
