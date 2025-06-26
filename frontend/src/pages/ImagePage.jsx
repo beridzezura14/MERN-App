@@ -7,17 +7,20 @@ import About from "../components/About";
 
 function ImagePage({ theme, toggleTheme }) {
   const [images, setImages] = useState([]);
-  
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/upload").then((res) => {
+    const baseURL = import.meta.env.PROD
+      ? "https://mern-app-6sjv.onrender.com"
+      : "http://localhost:5000";
+
+    axios.get(`${baseURL}/api/upload`).then((res) => {
       setImages(res.data);
     });
   }, []);
 
   return (
     <div>
-      <Header theme={theme} toggleTheme={toggleTheme}/>
+      <Header theme={theme} toggleTheme={toggleTheme} />
       <Hero />
       <About />
       <ImageList images={images} editable={false} />

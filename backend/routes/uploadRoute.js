@@ -4,11 +4,8 @@ import fs from "fs";
 import path from "path";
 import Image from "../models/Image.js";
 
-// import {verifyToken} from '../middleware/verifyToken.js'
-
 const router = express.Router();
 
-// მულტერის კონფიგურაცია (ფაილის ატვირთვა)
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/");
@@ -21,9 +18,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-/**
- * GET - ყველა სურათისა და სათაურის გამოტანა
- */
+
 router.get("/", async (req, res) => {
   try {
     const images = await Image.find().sort({ _id: -1 }); // ბოლო ატვირთული ზემოთ
@@ -34,9 +29,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-/**
- * POST - ატვირთავს სურათს და სათაურს
- */
 router.post("/", upload.single("image"), async (req, res) => {
   try {
     const { title, description  } = req.body;
@@ -50,9 +42,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-/**
- * PUT - სათაურის განახლება
- */
+
 router.put("/:id", upload.single("image"), async (req, res) => {
   try {
     const { title, description } = req.body;
@@ -60,7 +50,7 @@ router.put("/:id", upload.single("image"), async (req, res) => {
 
     if (!image) return res.status(404).json({ message: "Image not found" });
 
-    // ძველი სურათის წაშლა თუ ახალი აიტვირთა
+
     if (req.file) {
       const oldPath = path.join("uploads", path.basename(image.imageUrl));
       fs.unlink(oldPath, (err) => {
@@ -81,9 +71,7 @@ router.put("/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-/**
- * DELETE - კონკრეტული ჩანაწერის და ფაილის წაშლა
- */
+
 
 router.delete("/:id", async (req, res) => {
   try {

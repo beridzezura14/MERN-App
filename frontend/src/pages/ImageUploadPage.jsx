@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 function ImageUploadPage() {
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null);
-  const [description, setDescription] = useState(""); // 🆕 აღწერის ველი
+  const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
 
   const fetchImages = async () => {
@@ -37,7 +37,7 @@ function ImageUploadPage() {
     e.preventDefault();
     if (!image || !title || !description)
       // return alert("ყველა ველი აუცილებელია");
-      return toast.error("ყველა ველი აუცილებელია")
+      return toast.error("ყველა ველი აუცილებელია");
 
     const formData = new FormData();
     formData.append("title", title);
@@ -46,14 +46,18 @@ function ImageUploadPage() {
 
     try {
       const token = sessionStorage.getItem("token");
-      await axios.post("http://localhost:5000/api/upload", formData, {
+
+      const baseURL = import.meta.env.VITE_API_URL
+        ? "https://mern-app-6sjv.onrender.com"
+        : "http://localhost:5000";
+      await axios.post(`${baseURL}api/upload`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       // alert("ატვირთვა შესრულდა ✅");
-      toast.success('ატვირთვა შესრულდა')
+      toast.success("ატვირთვა შესრულდა");
       setTitle("");
       setImage(null);
       setDescription(""); // 🆕
@@ -69,9 +73,14 @@ function ImageUploadPage() {
 
   return (
     <div>
-      <Link className="btn btn-neutral ml-[5%] mt-2" to="/">HOME PAGE</Link>
+      <Link className="btn btn-neutral ml-[5%] mt-2" to="/">
+        HOME PAGE
+      </Link>
 
-      <form onSubmit={handleSubmit} className=" max-w-[90%] md:w-[500px] mx-auto flex gap-5 flex-col">
+      <form
+        onSubmit={handleSubmit}
+        className=" max-w-[90%] md:w-[500px] mx-auto flex gap-5 flex-col"
+      >
         <input
           type="text"
           value={title}
@@ -85,8 +94,14 @@ function ImageUploadPage() {
           onChange={(e) => setDescription(e.target.value)}
           className="input input-bordered w-full h-32"
         />
-        <input type="file" className="border" onChange={(e) => setImage(e.target.files[0])} />
-        <button type="submit" className="btn btn-primary">Upload</button>
+        <input
+          type="file"
+          className="border"
+          onChange={(e) => setImage(e.target.files[0])}
+        />
+        <button type="submit" className="btn btn-primary">
+          Upload
+        </button>
       </form>
 
       <ImageList

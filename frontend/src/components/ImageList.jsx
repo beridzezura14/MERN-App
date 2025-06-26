@@ -31,7 +31,11 @@ function ImageList({ images, editable = false, onDeleteLocal }) {
     if (editImage) formData.append("image", editImage);
 
     try {
-      await axios.put(`http://localhost:5000/api/upload/${id}`, formData);
+      const baseURL = import.meta.env.VITE_API_URL
+        ? "https://mern-app-6sjv.onrender.com"
+        : "http://localhost:5000";
+
+      await axios.put(`${baseURL}/api/upload/${id}`, formData);
       setEditId(null);
       window.location.reload();
     } catch (err) {
@@ -40,7 +44,7 @@ function ImageList({ images, editable = false, onDeleteLocal }) {
   };
 
   return (
-    <div className="max-w-[90%] my-16 mx-auto " >
+    <div className="max-w-[90%] my-16 mx-auto ">
       <h3 className="text-5xl">Product</h3>
       <div className="grid py-8 gap-8 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4">
         {images.length > 0 ? (
@@ -89,8 +93,10 @@ function ImageList({ images, editable = false, onDeleteLocal }) {
                       >
                         EDIT
                       </button>
-                      <button onClick={() => handleDelete(item._id)}
-                        className="border-2 border-red-500">
+                      <button
+                        onClick={() => handleDelete(item._id)}
+                        className="border-2 border-red-500"
+                      >
                         DELETE
                       </button>
                     </>

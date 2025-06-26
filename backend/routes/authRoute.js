@@ -10,7 +10,7 @@ router.post("/login", (req, res) => {
   const { password } = req.body;
 
   if (password !== process.env.UPLOAD_PASSWORD) {
-    return res.status(401).json({ message: "პაროლი არასწორია ❌" });
+    return res.status(401).json({ message: "პაროლი არასწორია" });
   }
 
   const token = jwt.sign({ access: true }, process.env.JWT_SECRET, {

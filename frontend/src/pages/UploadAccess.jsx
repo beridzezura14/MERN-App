@@ -11,7 +11,10 @@ function UploadAccess() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/login", {
+      const baseURL = import.meta.env.VITE_API_URL
+        ? "https://mern-app-6sjv.onrender.com"
+        : "http://localhost:5000";
+      const res = await axios.post(`${baseURL}/api/login`, {
         password,
       });
       const token = res.data.token;
